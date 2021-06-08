@@ -7,7 +7,7 @@ function App() {
     <div>
       Hello, TrybeWallet!
       <Switch>
-        <Route path="/" component={ Login } />
+        <Route exact path="/" component={ Login } />
       </Switch>
     </div>);
 }

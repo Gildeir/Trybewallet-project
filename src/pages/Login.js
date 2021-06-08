@@ -17,7 +17,7 @@ class Login extends React.Component {
             type="password"
             placeholder="Digite a senha"
           />
-          <button type="submit">Entre</button>
+          <button type="submit">Entrar</button>
         </form>
       </div>
 
