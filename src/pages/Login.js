@@ -18,7 +18,7 @@ class Login extends React.Component {
   enableLoginButton({ target: { type, value } }) {
     const { password, email } = this.state;
     const characteres = /\S+@\S+\.\S+/;
-    const passLenght = 6;
+    const passLenght = 5;
     if (characteres.test(email) && password.length >= passLenght) {
       this.setState({
         enableButton: false,
