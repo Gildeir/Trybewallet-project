@@ -38,23 +38,31 @@ class Login extends React.Component {
     const { saveLogin } = this.props;
     return (
       <div>
+        <br />
         <form>
           <label htmlFor="fname">
+            Login
             <input
               data-testid="email-input"
               type="email"
-              placeholder="Digite o email"
+              placeholder="me@example.com"
               onChange={ this.enableLoginButton }
               value={ email }
             />
+            <br />
+            <br />
           </label>
+          Senha
           <input
             data-testid="password-input"
             type="password"
-            placeholder="me@example.com"
+            placeholder="6 caracteres"
             onChange={ this.enableLoginButton }
             value={ password }
           />
+          <br />
+          {' '}
+          <br />
           <Link
             to="/carteira"
             onClick={ () => saveLogin(email) }
