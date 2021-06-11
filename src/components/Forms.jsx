@@ -35,48 +35,47 @@ class Forms extends Component {
   render() {
     const { currency, newCurrency } = this.state;
     const { saveCurrrency } = this.props;
-    console.log(saveCurrrency);
     return (
       <form>
         <label htmlFor="valor">
           Valor
-          <input type="number" name="name" />
+          <input type="text" id="valor" name="name" />
         </label>
-        <label htmlFor="description">
+        <label htmlFor="descriptionId">
           Descrição
-          <input type="text" name="name" />
+          <input type="text" name="descricao" id="descricao" />
         </label>
         <label htmlFor="moeda">
           Moeda
-          <select onChange={ this.handleChange }>
+          <select
+            name="moeda"
+            id="moeda"
+            onChange={ this.handleChange }
+            onClick={ () => saveCurrrency(newCurrency) }
+          >
             {Object.keys(currency).filter((b) => b !== 'USDT')
               .map((curr, index) => (
-                <option
-                  key={ index }
-                  value={ curr }
-                  onClick={ () => saveCurrrency(newCurrency) }
-                >
+                <option key={ index } value={ curr }>
                   {curr}
                 </option>))}
-            {}
           </select>
         </label>
-        <label htmlFor="método-de-pagamento">
+        <label htmlFor="metodoDePagamento">
           Método de pagamento
-          <select>
+          <select name="metodoDePagamento" id="metodoDePagamento">
             <option value="Dinheiro"> Dinheiro </option>
             <option value="Cartão de crédito"> Cartão de crédito </option>
             <option value="Cartão de débito"> Cartão de débito </option>
           </select>
         </label>
         <label htmlFor="tag">
-          Tag:
-          <select>
-            <option value="Alimentação"> Alimentação </option>
+          Tag
+          <select name="tag" id="tag">
+            <option value="Alimentacao"> Alimentação </option>
             <option value="Lazer"> Lazer </option>
             <option value="Trabalho"> Trabalho </option>
             <option value="Transporte"> Transporte </option>
-            <option value="Saúde"> Saúde </option>
+            <option value="saude"> Saúde </option>
           </select>
         </label>
       </form>
