@@ -12,6 +12,8 @@ class Forms extends Component {
     };
     this.getCurrencyApi = this.getCurrencyApi.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.optionTag = this.optionTag.bind(this);
+    this.optionMethod = this.optionMethod.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +34,24 @@ class Forms extends Component {
     }));
   }
 
+  optionTag() {
+    const options = ['Alimentação', 'Lazer', 'Trabalho', 'Transporte', 'Saúde'];
+    return (options.map((option, index) => (
+      <option key={ index } name={ option } id={ option }>
+        { option }
+      </option>
+    )));
+  }
+
+  optionMethod() {
+    const options = ['Dinheiro', 'Cartão de crédito', 'Cartão de débito'];
+    return (options.map((method, index) => (
+      <option key={ index } name={ method } id={ method }>
+        {method}
+      </option>
+    )));
+  }
+
   render() {
     const { currency, newCurrency } = this.state;
     const { saveCurrrency } = this.props;
@@ -41,7 +61,7 @@ class Forms extends Component {
           Valor
           <input type="text" id="valor" name="name" />
         </label>
-        <label htmlFor="descriptionId">
+        <label htmlFor="descricao">
           Descrição
           <input type="text" name="descricao" id="descricao" />
         </label>
@@ -63,19 +83,13 @@ class Forms extends Component {
         <label htmlFor="metodoDePagamento">
           Método de pagamento
           <select name="metodoDePagamento" id="metodoDePagamento">
-            <option value="Dinheiro"> Dinheiro </option>
-            <option value="Cartão de crédito"> Cartão de crédito </option>
-            <option value="Cartão de débito"> Cartão de débito </option>
+            {this.optionMethod()}
           </select>
         </label>
-        <label htmlFor="tag">
+        <label htmlFor="Tag">
           Tag
-          <select name="tag" id="tag">
-            <option value="Alimentacao"> Alimentação </option>
-            <option value="Lazer"> Lazer </option>
-            <option value="Trabalho"> Trabalho </option>
-            <option value="Transporte"> Transporte </option>
-            <option value="saude"> Saúde </option>
+          <select name="Tag" id="Tag">
+            {this.optionTag()}
           </select>
         </label>
       </form>
