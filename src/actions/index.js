@@ -8,15 +8,34 @@ export const loginData = (email) => (
   }
 );
 
-export const resultCurrencyAction = (newCurrency) => ({
-  type: 'TYPE_CURRENCY',
+export const getExpenses = (expenses) => ({
+  type: 'GET_EXPENSES',
   payload: {
-    newCurrency,
+    expenses,
+
   },
 });
 
-// export const getCurrencyResult = () => async (dispatch) => {
+export const getCurrencies = (exchange) => ({
+  type: 'GET_CURRENCIES',
+  payload: {
+    exchange,
+  },
+});
+
+export const requestCurrencies = () => ({
+  type: 'REQUEST_CURRENCIES',
+});
+
+export const fetchExchangeRates = () => (dispatch) => {
+  (requestCurrencies());
+  return fetch('https://economia.awesomeapi.com.br/json/all')
+    .then((response) => response.json())
+    .then((exchange) => dispatch((getCurrencies(exchange))));
+};
+
+// = (expenses) => async (dispatch) => {
 //   const request = await fetch('https://economia.awesomeapi.com.br/json/all');
 //   const resolve = await request.json();
-//   dispatch(resultCurrencyAction(resolve));
-// };
+//   dispatch(addExpenses({ ...expenses, exchangeRates: resolve }));
+//

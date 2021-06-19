@@ -1,37 +1,81 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { resultCurrencyAction } from '../actions';
+import { fetchExchangeRates, getExpenses } from '../actions';
 
 class Forms extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currency: [],
-      newCurrency: 'USD',
+      id: 0,
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+      exchangeRates: {},
     };
+
     this.getCurrencyApi = this.getCurrencyApi.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.optionTag = this.optionTag.bind(this);
     this.optionMethod = this.optionMethod.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.valor = this.valor.bind(this);
+    this.descricao = this.descricao.bind(this);
+    this.setStateChange = this.setStateChange.bind(this);
+    this.execution = this.execution.bind(this);
+    this.changeHandle = this.changeHandle.bind(this);
   }
 
   componentDidMount() {
-    this.getCurrencyApi();
+    const { saveExchangeRates } = this.props;
+    saveExchangeRates();
   }
 
   async getCurrencyApi() {
-    const request = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const resolve = await request.json();
-    this.setState({
-      currency: resolve,
-    });
+    return fetch('https://economia.awesomeapi.com.br/json/all')
+      .then((response) => response.json())
+      .then((resolve) => {
+        this.setState({
+          exchangeRates: resolve,
+        },
+        () => this.execution());
+      });
+  }
+
+  // async getCurrencyApi() {
+  //   const request = await fetch('https://economia.awesomeapi.com.br/json/all');
+  //   const resolve = await request.json();
+  //   this.setState({
+  //     { currency: resolve },
+  //     { exchangeRates: i },
+  //     () => this.execution(),
+  //   });
+  // }
+
+  setStateChange({ target: { value, id } }) {
+    this.setState((prev) => ({
+      expenses: { ...prev.expenses, [id]: value } }));
+  }
+
+  changeHandle(event) {
+    this.setState({ [event.target.id]: event.target.value });
+  }
+
+  execution() {
+    const { expensesAction } = this.props;
+    expensesAction(this.state);
+    this.setState((oldState) => ({ id: oldState.id + 1 }));
   }
 
   handleChange({ target: { value } }) {
     this.setState(() => ({
-      newCurrency: value,
+      expenses: value,
     }));
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
   }
 
   optionTag() {
@@ -43,54 +87,100 @@ class Forms extends Component {
     )));
   }
 
-  optionMethod() {
+  optionMethod(metodo) {
     const options = ['Dinheiro', 'Cartão de crédito', 'Cartão de débito'];
     return (options.map((method, index) => (
-      <option key={ index } name={ method } id={ method }>
+      <option
+        key={ index }
+        value={ method }
+        name={ metodo }
+        id={ method }
+      >
         {method}
       </option>
     )));
   }
 
-  render() {
-    const { currency, newCurrency } = this.state;
-    const { saveCurrrency } = this.props;
+  optionCurrency() {
+    const { exchangeState } = this.props;
+    return (exchangeState.filter((b) => b !== 'USDT')
+      .map((option, index) => (
+        <option key={ index } value={ option }>
+          {option}
+        </option>))
+    );
+  }
+
+  valor() {
     return (
-      <form>
-        <label htmlFor="valor">
-          Valor
-          <input type="text" id="valor" name="name" />
-        </label>
-        <label htmlFor="descricao">
-          Descrição
-          <input type="text" name="descricao" id="descricao" />
-        </label>
-        <label htmlFor="moeda">
+      <label htmlFor="valor">
+        Valor
+        <input
+          type="number"
+          id="valor"
+          name="name"
+          min="0"
+          onChange={ this.changeHandle }
+        />
+      </label>
+    );
+  }
+
+  descricao(description) {
+    return (
+      <label htmlFor="description">
+        Descrição
+        <input
+          value={ description }
+          type="text"
+          name="description"
+          id="description"
+          onChange={ this.changeHandle }
+        />
+      </label>
+    );
+  }
+
+  render() {
+    const { value, description } = this.state;
+    return (
+      <form onSubmit={ this.handleSubmit }>
+        {this.valor(value)}
+        {this.descricao(description)}
+        <label htmlFor="currency">
           Moeda
           <select
-            name="moeda"
-            id="moeda"
-            onChange={ this.handleChange }
-            onClick={ () => saveCurrrency(newCurrency) }
+            name="currency"
+            id="currency"
+            onChange={ this.changeHandle }
+            // onClick={ () => saveCurrrency(expenses) }
           >
-            {Object.keys(currency).filter((b) => b !== 'USDT')
-              .map((curr, index) => (
-                <option key={ index } value={ curr }>
-                  {curr}
-                </option>))}
+            {this.optionCurrency()}
           </select>
         </label>
-        <label htmlFor="metodoDePagamento">
+        <label htmlFor="method">
           Método de pagamento
-          <select name="metodoDePagamento" id="metodoDePagamento">
+          <select
+            name="method"
+            id="method"
+            onChange={ this.setStateChange }
+
+          >
             {this.optionMethod()}
           </select>
         </label>
-        <label htmlFor="Tag">
+        <label
+          htmlFor="tag"
+          onChange={ this.setStateChange }
+
+        >
           Tag
-          <select name="Tag" id="Tag">
+          <select name="tag" id="tag">
             {this.optionTag()}
           </select>
+          <button type="submit" onClick={ () => this.getCurrencyApi() }>
+            Adicionar despesa
+          </button>
         </label>
       </form>
     );
@@ -98,15 +188,32 @@ class Forms extends Component {
 }
 
 Forms.propTypes = {
-  saveCurrrency: PropTypes.func.isRequired,
+  expensesAction: PropTypes.func.isRequired,
+  exchangeState: PropTypes.arrayOf(PropTypes.string).isRequired,
+  saveExchangeRates: PropTypes.func.isRequired,
+  // expenses: PropTypes.arrayOf(
+  //   PropTypes.shape({
+  //     id: PropTypes.number,
+  //     value: PropTypes.number,
+  //     currency: PropTypes.string,
+  //     description: PropTypes.string,
+  //     method: PropTypes.string,
+  //     tag: PropTypes.string,
+  //     exchangeRates: PropTypes.shape,
+  //   }),
+  // ).isRequired,
+  // getCurrencies: PropTypes.func.isRequired,
+  // exchangeRatesFunc: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ wallet: { newCurrency } }) => ({
-  newCurrency,
+const mapStateToProps = (state) => ({
+  exchangeState: state.wallet.currencies,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveCurrrency: (newCurrency) => dispatch(resultCurrencyAction(newCurrency)),
+  saveExchangeRates: () => dispatch(fetchExchangeRates()),
+  expensesAction: (expenses) => dispatch(getExpenses(expenses)),
+  // saveCurrrency: (expenses) => dispatch(resultCurrencyAction(expenses)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Forms);

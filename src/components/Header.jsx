@@ -1,41 +1,55 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loginData } from '../actions';
-import Logo from '../image/Trybe_logo-baixa.png';
+import PropTypes from 'prop-types';
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.total = this.total.bind(this);
+  }
+
+  total() {
+    let total = 0;
+    const { expenses } = this.props;
+    console.log(expenses);
+
+    expenses.forEach(({ value, currency, exchangeRates }) => {
+      total += exchangeRates[currency].ask * value;
+    });
+    return total;
+  }
+
   render() {
-    const total = 0;
-    const currency = 'BRL';
-    const { email } = this.props;
+    const { userLogin } = this.props;
     return (
-      <header>
-        <img src={ Logo } width="150x" alt="trybe_logo" />
-        <span data-testid="email-field">
-          {` Login: ${email}`}
-        </span>
-        <span data-testid="total-field">
-          {` Total: ${total}`}
-        </span>
-        <span data-testid="header-currency-field">
-          {` Currency: ${currency}`}
-        </span>
-      </header>
+      <div>
+        <header>
+          <p data-testid="email-field">
+            E-mail:
+            { userLogin }
+          </p>
+          <p data-testid="total-field" name="expenses">
+            Despesa Total:
+            {' R$ '}
+            { this.total() }
+          </p>
+          <p data-testid="header-currency-field" name="currency">
+            BRL
+          </p>
+        </header>
+      </div>
     );
   }
 }
 
+const mapStateToProps = (state) => ({
+  userLogin: state.user.email,
+  expenses: state.wallet.expenses,
+});
+
 Header.propTypes = {
-  email: PropTypes.string,
-}.isRequired;
+  userLogin: PropTypes.string.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
-const mapStateToProps = ({ user: { email } }) => ({
-  email,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  saveLogin: (email) => dispatch(loginData(email)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps)(Header);

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { loginData } from '../actions';
 import Header from '../components/Header';
 import Form from '../components/Forms';
+import Table from '../components/Table';
 
 class Wallet extends React.Component {
   render() {
@@ -12,6 +13,8 @@ class Wallet extends React.Component {
         <Header />
         <br />
         <Form />
+        <br />
+        <Table />
       </>
     );
   }
