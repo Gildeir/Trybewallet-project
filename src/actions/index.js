@@ -23,6 +23,13 @@ export const getCurrencies = (exchange) => ({
   },
 });
 
+export const deleteId = (id) => ({
+  type: 'DELETE_ID',
+  payload: {
+    id,
+  },
+});
+
 export const requestCurrencies = () => ({
   type: 'REQUEST_CURRENCIES',
 });
