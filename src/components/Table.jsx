@@ -1,23 +1,62 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import HeaderTable from './HeaderTable';
 
-class Table extends React.Component {
+export class Table extends Component {
   render() {
+    const { expenses } = this.props;
+    console.log(expenses);
     return (
-      <thead>
-        <tr>
-          <th>Descrição</th>
-          <th>Tag</th>
-          <th>Método de pagamento</th>
-          <th>Valor</th>
-          <th>Moeda</th>
-          <th>Câmbio utilizado</th>
-          <th>Valor convertido</th>
-          <th>Moeda de conversão</th>
-          <th>Editar/Excluir</th>
-        </tr>
-      </thead>
+      <table>
+        <HeaderTable />
+        <tbody>
+          {expenses.map((list, index) => (
+            <tr key={ index }>
+              <td>{list.description}</td>
+              <td>{list.tag}</td>
+              <td>{list.method}</td>
+              <td>{list.value}</td>
+
+              <td role="cell">
+                { console.log(list.currency)}
+                {
+                  list.currency === 'USD'
+                    ? 'Dólar Comercial'
+                    : list.exchangeRates[list.currency].name.split('/', 1)
+                }
+              </td>
+              <td>
+                {
+                  parseFloat(list.exchangeRates[list.currency].ask).toFixed(2)
+                }
+              </td>
+              <td>
+                {
+                  parseFloat(list.value
+                    * list.exchangeRates[list.currency].ask).toFixed(2)
+                }
+              </td>
+              <td>
+                {
+                }
+              </td>
+              <td>Real</td>
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
     );
   }
 }
 
-export default Table;
+const mapStateToProps = (state) => ({
+  expenses: state.wallet.expenses,
+});
+
+Table.propTypes = {
+  expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
+export default connect(mapStateToProps)(Table);
