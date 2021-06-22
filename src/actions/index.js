@@ -33,9 +33,3 @@ export const fetchExchangeRates = () => (dispatch) => {
     .then((response) => response.json())
     .then((exchange) => dispatch((getCurrencies(exchange))));
 };
-
-// = (expenses) => async (dispatch) => {
-//   const request = await fetch('https://economia.awesomeapi.com.br/json/all');
-//   const resolve = await request.json();
-//   dispatch(addExpenses({ ...expenses, exchangeRates: resolve }));
-//

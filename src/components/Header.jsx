@@ -20,7 +20,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { userLogin } = this.props;
+    const { userLogin, expenses } = this.props;
     return (
       <div>
         <header>
@@ -31,7 +31,8 @@ class Header extends React.Component {
           <p data-testid="total-field" name="expenses">
             Despesa Total:
             {' R$ '}
-            { this.total() }
+            {!expenses ? 0 : this.total()}
+
           </p>
           <p data-testid="header-currency-field" name="currency">
             BRL

@@ -113,12 +113,11 @@ class Forms extends Component {
 
   valor() {
     return (
-      <label htmlFor="valor">
+      <label htmlFor="value">
         Valor
         <input
           type="number"
-          id="valor"
-          name="name"
+          id="value"
           min="0"
           onChange={ this.changeHandle }
         />
