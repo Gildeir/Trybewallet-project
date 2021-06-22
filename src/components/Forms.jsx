@@ -8,10 +8,11 @@ class Forms extends Component {
     super(props);
     this.state = {
       id: 0,
-      description: '',
+      value: 0,
       currency: 'USD',
       method: 'Dinheiro',
       tag: 'Alimentação',
+      description: '',
       exchangeRates: {},
     };
 
@@ -22,7 +23,7 @@ class Forms extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.valor = this.valor.bind(this);
     this.descricao = this.descricao.bind(this);
-    this.setStateChange = this.setStateChange.bind(this);
+    // this.setStateChange = this.setStateChange.bind(this);
     this.execution = this.execution.bind(this);
     this.changeHandle = this.changeHandle.bind(this);
   }
@@ -53,10 +54,10 @@ class Forms extends Component {
   //   });
   // }
 
-  setStateChange({ target: { value, id } }) {
-    this.setState((prev) => ({
-      expenses: { ...prev.expenses, [id]: value } }));
-  }
+  // setStateChange({ target: { value, id } }) {
+  //   this.setState((prev) => ({
+  //     expenses: { ...prev.expenses, [id]: value } }));
+  // }
 
   changeHandle(event) {
     this.setState({ [event.target.id]: event.target.value });
@@ -162,7 +163,7 @@ class Forms extends Component {
           <select
             name="method"
             id="method"
-            onChange={ this.setStateChange }
+            onChange={ this.changeHandle }
 
           >
             {this.optionMethod()}
@@ -170,7 +171,7 @@ class Forms extends Component {
         </label>
         <label
           htmlFor="tag"
-          onChange={ this.setStateChange }
+          onChange={ this.changeHandle }
 
         >
           Tag
@@ -190,19 +191,6 @@ Forms.propTypes = {
   expensesAction: PropTypes.func.isRequired,
   exchangeState: PropTypes.arrayOf(PropTypes.string).isRequired,
   saveExchangeRates: PropTypes.func.isRequired,
-  // expenses: PropTypes.arrayOf(
-  //   PropTypes.shape({
-  //     id: PropTypes.number,
-  //     value: PropTypes.number,
-  //     currency: PropTypes.string,
-  //     description: PropTypes.string,
-  //     method: PropTypes.string,
-  //     tag: PropTypes.string,
-  //     exchangeRates: PropTypes.shape,
-  //   }),
-  // ).isRequired,
-  // getCurrencies: PropTypes.func.isRequired,
-  // exchangeRatesFunc: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

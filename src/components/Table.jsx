@@ -3,7 +3,7 @@ import React from 'react';
 class Table extends React.Component {
   render() {
     return (
-      <table>
+      <thead>
         <tr>
           <th>Descrição</th>
           <th>Tag</th>
@@ -15,7 +15,7 @@ class Table extends React.Component {
           <th>Moeda de conversão</th>
           <th>Editar/Excluir</th>
         </tr>
-      </table>
+      </thead>
     );
   }
 }
